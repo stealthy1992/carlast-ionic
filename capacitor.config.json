@@ -1,0 +1,8 @@
+{
+  "appId": "com.carlast.app",
+  "appName": "CarLast",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
