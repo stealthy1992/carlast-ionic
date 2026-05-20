@@ -81,5 +81,10 @@ export async function submitRentApplication({ customerName, email, carName, rent
     throw new Error('Rent API returned 200 but did not create a Sanity document')
   }
 
+  console.info('[RENT SUBMISSION]', {
+    documentId: result.documentId,
+    email: result.email || null,
+  })
+
   return result
 }
