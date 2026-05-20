@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 node_modules
 /.pnp
@@ -7,41 +5,47 @@ node_modules
 
 # testing
 /coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-/dist
-android/app/build/
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# local env files
-!.env*.local
-
-# vercel
-.vercel
-
-# Playwright
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
 
+# next.js
+/.next/
+/out/
+
+# ionic/capacitor builds
+/build
+/dist
+android/app/build/
+android/.gradle/
+android/build/
+android/capacitor-android/build/
+android/capacitor-cordova-android-plugins/build/
+
+# local env files
 .env
 .env.local
+.env.*.local
 .env.production
-.auth/
 sanity_carlast/.env
+
+# secrets / signing
+*.pem
+*.jks
+*.keystore
+key.properties
+
+# vercel
+.vercel
+
+# misc
+.DS_Store
+.auth/
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*

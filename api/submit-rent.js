@@ -158,7 +158,13 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({
         success: true,
         documentId: doc._id,
-        previewUrl,
+        email: {
+          sent: true,
+          messageId: sentInfo.messageId || null,
+          accepted: sentInfo.accepted || [],
+          rejected: sentInfo.rejected || [],
+          previewUrl,
+        },
       })
     } catch (error) {
       console.error('Submission error:', error)
