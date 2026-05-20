@@ -4,7 +4,7 @@ import imageUrlBuilder from '@sanity/image-url'
 const projectId = import.meta.env.VITE_SANITY_PROJECT_ID || 'bushe0bq'
 const dataset = import.meta.env.VITE_SANITY_DATASET || 'production'
 const apiVersion = import.meta.env.VITE_SANITY_API_VERSION || '2022-03-10'
-const rentApiUrl = import.meta.env.VITE_RENT_API_URL || '/api/submit-rent'
+const rentApiUrl = import.meta.env.VITE_RENT_API_URL || 'https://carlast.vercel.app/api/submit-rent'
 
 export const client = sanityClient({
   projectId,
@@ -68,10 +68,17 @@ export async function submitRentApplication({ customerName, email, carName, rent
     body: formData,
   })
 
-  const result = await response.json().catch(() => ({}))
+  const contentType = response.headers.get('content-type') || ''
+  const result = contentType.includes('application/json')
+    ? await response.json().catch(() => ({}))
+    : {}
 
   if (!response.ok) {
     throw new Error(result.message || 'Rent application failed')
+  }
+
+  if (!result.success || !result.documentId) {
+    throw new Error('Rent API returned 200 but did not create a Sanity document')
   }
 
   return result
