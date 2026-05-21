@@ -91,6 +91,16 @@ VITE_RENT_API_URL=${env.VITE_RENT_API_URL}
     stage('Generate Test Report') {
         steps {
             catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            // Rename any .log reporter files to .json so mochawesome-merge can find them
+            bat '''
+                @echo off
+                if exist reports\\appium\\*.log (
+                for %%f in (reports\\appium\\*.log) do (
+                    echo Renaming %%f to %%~nf.json
+                    rename "%%f" "%%~nf.json"
+                )
+                )
+            '''
             bat 'npx mochawesome-merge reports/appium/*.json -o reports/appium/merged.json'
             bat 'npx marge reports/appium/merged.json --reportDir reports/appium/html --inline'
             }

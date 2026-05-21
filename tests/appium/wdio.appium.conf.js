@@ -28,13 +28,15 @@ exports.config = {
   reporters: [
     'spec',
     ['mochawesome', {
-      outputDir:        './reports/appium',   // folder where JSON fragments go
-      outputFilePrefix: 'wdio-report',        // each file: wdio-report-0.json, wdio-report-1.json ...
-      overwrite:        false,                // keep all fragments so mochawesome-merge can combine them
-      html:             false,                // don't generate HTML per-fragment; marge does it at the end
-      json:             true,                 // output raw JSON fragments — required for merge step
+      outputDir:        './reports/appium',
+      outputFilePrefix: 'wdio-report',
+      overwrite:        false,
+      html:             false,
+      json:             true,
+      // Force the output file to use .json extension
+      outputFileFormat: (options) => `wdio-report-${options.cid}.json`,
     }],
-  ],  
+  ],
 
   // ── Appium service — manages Appium server process automatically ──────────
   services: [
