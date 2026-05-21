@@ -34,7 +34,7 @@ exports.config = {
       html:             false,                // don't generate HTML per-fragment; marge does it at the end
       json:             true,                 // output raw JSON fragments — required for merge step
     }],
-  ],
+  ],  
 
   // ── Appium service — manages Appium server process automatically ──────────
   services: [

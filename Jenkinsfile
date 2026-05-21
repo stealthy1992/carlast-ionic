@@ -53,7 +53,7 @@ VITE_RENT_API_URL=${env.VITE_RENT_API_URL}
     stage('Start Emulator') {
         steps {
             // Start AVD in background (replace 'Pixel_6' with your AVD name)
-            bat 'start /B emulator -avd Pixel_6 -no-window -no-audio'
+            bat 'start /B emulator -avd Pixel_4 -no-window -no-audio'
 
             // Wait until emulator is fully booted
             bat '''
@@ -78,36 +78,34 @@ VITE_RENT_API_URL=${env.VITE_RENT_API_URL}
       }
     }
     stage('Generate Test Report') {
-      steps {
-        // Merge all individual Mochawesome JSON fragments into one
-        bat 'npx mochawesome-merge reports/appium/*.json -o reports/appium/merged.json'
-        // Generate the final self-contained HTML report from the merged JSON
-        bat 'npx marge reports/appium/merged.json --reportDir reports/appium/html --inline'
-      }
-      post {
-        always {
-          // Publish the HTML report inside Jenkins UI via the HTML Publisher plugin
-          publishHTML(target: [
-            allowMissing         : true,
-            alwaysLinkToLastBuild: true,
-            keepAll              : true,
-            reportDir            : 'reports/appium/html',
-            reportFiles          : 'merged.html',
-            reportName           : 'Appium Test Report'
-          ])
+        steps {
+            catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            bat 'npx mochawesome-merge reports/appium/*.json -o reports/appium/merged.json'
+            bat 'npx marge reports/appium/merged.json --reportDir reports/appium/html --inline'
+            }
         }
-      }
+        post {
+            always {
+            publishHTML(target: [
+                allowMissing         : true,
+                alwaysLinkToLastBuild: true,
+                keepAll              : true,
+                reportDir            : 'reports/appium/html',
+                reportFiles          : 'merged.html',
+                reportName           : 'Appium Test Report'
+            ])
+            }
+        }
     }
   }
   post {
     always {
-      bat 'adb emu kill'
-      archiveArtifacts artifacts: 'android/app/build/outputs/apk/debug/*.apk', fingerprint: true
-      archiveArtifacts artifacts: 'appium.log', allowEmptyArchive: true
-      archiveArtifacts artifacts: 'tests/appium/**/*.png,tests/appium/**/*.jpg', allowEmptyArchive: true
-      // Also archive the raw and merged report files as a fallback
-      archiveArtifacts artifacts: 'reports/appium/**/*', allowEmptyArchive: true
-      
+        // Gracefully kill the emulator; allowEmptyArchive-style tolerance with || exit 0
+        bat 'adb -s emulator-5554 emu kill || echo No emulator to kill, skipping'
+        archiveArtifacts artifacts: 'android/app/build/outputs/apk/debug/*.apk', fingerprint: true
+        archiveArtifacts artifacts: 'appium.log', allowEmptyArchive: true
+        archiveArtifacts artifacts: 'tests/appium/**/*.png,tests/appium/**/*.jpg', allowEmptyArchive: true
+        archiveArtifacts artifacts: 'reports/appium/**/*', allowEmptyArchive: true
     }
-  }
+ }
 }

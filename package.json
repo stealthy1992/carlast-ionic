@@ -13,7 +13,6 @@
     "test:appium": "wdio run ./wdio.appium.conf.js"
   },
   "dependencies": {
-    
     "@capacitor/android": "^7.4.4",
     "@capacitor/core": "^7.4.4",
     "@ionic/react": "^8.7.11",
@@ -43,6 +42,7 @@
     "mochawesome-merge": "^4.4.1",
     "mochawesome-report-generator": "^6.3.2",
     "vite": "^6.4.2",
+    "wdio-mochawesome-reporter": "^7.0.0",
     "webdriverio": "^9.27.1"
   }
 }
