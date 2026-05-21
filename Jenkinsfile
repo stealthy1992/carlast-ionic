@@ -22,6 +22,7 @@ pipeline {
         bat 'where appium'
         bat 'adb devices'
         bat 'appium driver list --installed'
+        bat 'npm list wdio-mochawesome-reporter'
       }
     }
     stage('Install Dependencies') {
@@ -69,6 +70,11 @@ VITE_RENT_API_URL=${env.VITE_RENT_API_URL}
                 echo Emulator booted successfully
             )
             '''
+        }
+    }
+    stage('Prepare Report Dir') {
+        steps {
+            bat 'if not exist reports\\appium mkdir reports\\appium'
         }
     }
     stage('Run Appium Tests') {

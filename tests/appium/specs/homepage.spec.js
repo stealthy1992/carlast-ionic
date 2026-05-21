@@ -22,7 +22,7 @@ describe('Homepage Functionality Tests', () => {
 
     })
     
-    it.skip('App should initialize and browser should be available', async () => {
+    it('App should initialize and browser should be available', async () => {
         // Verify WebdriverIO/Appium globals are available
         expect(browser).to.exist
         expect(browser.capabilities).to.exist
@@ -52,19 +52,19 @@ describe('Homepage Functionality Tests', () => {
 
     })
     
-    it.skip('This will test all the cars for sale are displaying on homepage', async () => {
+    it('This will test all the cars for sale are displaying on homepage', async () => {
         // TODO: Implement car listing test
         await HomePage.tapCar('Daihatsu Moving');
     })
 
-    it.skip('Will check the correct car loaded in detail view and will add it to cart.', async () => {
+    it('Will check the correct car loaded in detail view and will add it to cart.', async () => {
 
         const carName = await DetailPage.verifyCarDetails('Daihatsu Moving');
         expect(carName).to.equal('Daihatsu Moving');
         await DetailPage.applyForPurchase();
     })
 
-    it.skip('Will check if the drawer opens on clicking cart and check if the same car is listed there', async () => {
+    it('Will check if the drawer opens on clicking cart and check if the same car is listed there', async () => {
 
         const [ cartContent, carCount ] = await CartSlider.checkSliderContent();
         expect(cartContent).to.include('Your Cart');
@@ -75,7 +75,7 @@ describe('Homepage Functionality Tests', () => {
         
     })
 
-    it.skip('This will tap on a car-for-rent, and will click the rent pop up button', async () => {
+    it('This will tap on a car-for-rent, and will click the rent pop up button', async () => {
 
         await HomePage.tapCar('NIO EP6');
         await driver.pause(2000);
