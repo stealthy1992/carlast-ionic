@@ -1,7 +1,8 @@
 # CarLast Ionic Android Build
 
-This repository now contains an Ionic React + Capacitor frontend in `src/`.
-The Sanity studio remains in `sanity_carlast/`.
+This repository contains the Ionic React + Capacitor mobile app in `src/`.
+The Next.js web app, Vercel API routes, and Sanity Studio live in the separate
+Next.js repository.
 
 ## Required Environment
 
@@ -11,15 +12,17 @@ Create a local `.env` file for the mobile app with:
 VITE_SANITY_PROJECT_ID=bushe0bq
 VITE_SANITY_DATASET=production
 VITE_SANITY_API_VERSION=2022-03-10
-VITE_RENT_API_URL=https://your-vercel-deployment.vercel.app/api/submit-rent
+VITE_RENT_API_URL=https://carlast.vercel.app/api/submit-rent
 ```
 
 Do not put a Sanity write token inside the Ionic app. Rent applications go
-through the serverless endpoint at `api/submit-rent.js`, which uploads the
-certificate, creates a `userForms` document in Sanity, and sends the email.
-Catalog data can load without a token if the dataset allows public reads.
+through the deployed Next.js endpoint at `https://carlast.vercel.app/api/submit-rent`,
+which uploads the certificate, creates a `userForms` document in Sanity, and
+sends the email. Catalog data can load without a token if the dataset allows
+public reads.
 
-Set these variables in Vercel for the serverless endpoint:
+Set these variables in Vercel for the Next.js serverless endpoint, not in this
+mobile repository:
 
 ```bash
 SANITY_PROJECT_ID=bushe0bq
@@ -28,7 +31,7 @@ SANITY_API_VERSION=2022-03-10
 SANITY_WRITE_TOKEN=your_sanity_write_token
 GMAIL_USER=your_gmail_address
 GMAIL_APP_PASSWORD=your_gmail_app_password
-APP_ORIGIN=https://your-vercel-deployment.vercel.app
+APP_ORIGIN=https://carlast.vercel.app
 ```
 
 Sanity must allow the web origins used by Ionic/Capacitor. In Sanity Manage,
@@ -46,7 +49,7 @@ Enable credentials for the origins if you use a browser-exposed token.
 ## Local Development
 
 ```bash
-npm install --legacy-peer-deps
+npm install
 npm run dev
 ```
 

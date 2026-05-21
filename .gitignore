@@ -6,14 +6,6 @@ node_modules
 # testing
 /coverage
 /test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/
-
-# next.js
-/.next/
-/out/
 
 # ionic/capacitor builds
 /build
@@ -24,21 +16,27 @@ android/build/
 android/capacitor-android/build/
 android/capacitor-cordova-android-plugins/build/
 
+# generated artifacts
+/artifacts/
+/app-debug.apk
+*.apk
+/appium.log
+tests/appium/chromedriver.zip
+tests/appium/chromedriver/**/*.zip
+tests/appium/package.json
+tests/appium/package-lock.json
+
 # local env files
 .env
 .env.local
 .env.*.local
 .env.production
-sanity_carlast/.env
 
 # secrets / signing
 *.pem
 *.jks
 *.keystore
 key.properties
-
-# vercel
-.vercel
 
 # misc
 .DS_Store

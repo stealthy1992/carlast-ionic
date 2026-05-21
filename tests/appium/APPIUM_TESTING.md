@@ -1,7 +1,6 @@
 # Appium Test Setup
 
-This project keeps Appium tests separate from the existing Playwright tests.
-The Appium suite lives under:
+The mobile test suite uses WebdriverIO + Appium and lives under:
 
 ```text
 tests/appium/
@@ -11,10 +10,11 @@ tests/appium/
 
 ```text
 wdio.appium.conf.js
-tests/appium/specs/rent-flow.spec.js
+tests/appium/specs/homepage.spec.js
 tests/appium/page-objects/BasePage.js
 tests/appium/page-objects/HomePage.js
-tests/appium/page-objects/RentDetailsPage.js
+tests/appium/page-objects/DetailPage.js
+tests/appium/page-objects/CartSlider.js
 ```
 
 All test files use CommonJS:
@@ -91,13 +91,7 @@ $env:APPIUM_BASE_PATH="/"
 
 ## Run Locally
 
-Start Appium in one terminal:
-
-```bash
-appium
-```
-
-In another terminal:
+The WDIO config starts and stops Appium through `@wdio/appium-service`, so run:
 
 ```bash
 npm run test:appium

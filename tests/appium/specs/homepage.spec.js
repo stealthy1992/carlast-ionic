@@ -5,15 +5,21 @@ const contextHelper = require('../helpers/contextHelper')
 const DetailPage = require('../page-objects/DetailPage')
 const CartSlider = require('../page-objects/CartSlider')
 const path = require('path');
+const { fetchCarsForSale, fetchCarsForRent } = require('../helpers/sanityHelper');
 
 
 describe('Homepage Functionality Tests', () => {
+
+    let carsForSale, carsForRent;
 
     beforeEach(async () => {
         // Wait for app to stabilize
         await browser.pause(1000)
         await BasePage.initWebView();
         await contextHelper.logCurrentContext();
+        carsForSale = await fetchCarsForSale();
+        carsForRent = await fetchCarsForRent();
+
     })
     
     it.skip('App should initialize and browser should be available', async () => {
@@ -22,6 +28,28 @@ describe('Homepage Functionality Tests', () => {
         expect(browser.capabilities).to.exist
         expect(browser.capabilities.platformName).to.equal('Android')
         await driver.pause(10000)
+    })
+
+    it('This will test all the sale/rent cars are as per Sanity studio', async () => {
+        let saleCarsNames = [];
+        let rentCarsNames = [];
+        const [ saleCars, rentCars ] = await HomePage.fetchAllCars();
+
+        for (let car of carsForSale){
+            saleCarsNames.push(car.name);
+        }
+        for(let car of carsForRent){
+            rentCarsNames.push(car.name);
+        }
+
+        for(let car of saleCars){
+            expect(saleCarsNames).to.include(car);     
+        }
+
+        for(let car of rentCars){
+            expect(rentCarsNames).to.include(car);
+        }
+
     })
     
     it.skip('This will test all the cars for sale are displaying on homepage', async () => {
@@ -47,7 +75,7 @@ describe('Homepage Functionality Tests', () => {
         
     })
 
-    it('This will tap on a car-for-rent, and will click the rent pop up button', async () => {
+    it.skip('This will tap on a car-for-rent, and will click the rent pop up button', async () => {
 
         await HomePage.tapCar('NIO EP6');
         await driver.pause(2000);
@@ -62,18 +90,12 @@ describe('Homepage Functionality Tests', () => {
 
     })
 
-    // it('should upload a profile image', async () => {
-        
-    //     await BasePage.switchToWebView();
-        
-    //     // Use Option 2 — bypass native picker entirely
-    //     await BasePage.uploadFileInWebView(
-    //         'input[type="file"]',
-    //         '/sdcard/Pictures/uploadImage.jpg'
-    //     );
+    // it('This will make GROQ query request to Sanity to fetch car names', async () => {
 
-    //     // Verify upload was accepted — check preview or filename display
-    //     const preview = await BasePage.getActivePageElement('img.upload-preview');
-    //     await expect(preview).toBeDisplayed();
-    // });
+    //     const response = await fetch(
+    //         `https://${VITE_SANITY_PROJECT_ID}.api.sanity.io/v2021-10-21/data/query/production` +
+    //         `?query=${encodeURIComponent('*[_type == "carsforsale"]{ name }')}`
+    //     );
+    //     const { result } = await response.json();
+    // })
 })

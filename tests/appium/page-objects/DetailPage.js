@@ -58,7 +58,7 @@ class DetailPage extends BasePage {
 
         // Now setValue works correctly
         await nativeInput.click();
-        await nativeInput.setValue('Appium User');
+        await nativeInput.setValue('Latest Appium User');
         await driver.pause(2000);
 
         const email = await inputs[1];
@@ -188,13 +188,37 @@ class DetailPage extends BasePage {
                 };
         });
 
+        const popupClosure = await $('ion-modal[is-open="true"]');
+        
         const submitBtn = await $('ion-button[type="submit"]');
         await submitBtn.click();
         await driver.pause(5000);
         // const logs = await driver.getLogs('browser');
         // logs.forEach(log => console.log('[Browser Log]', log.message));
         const submissionLog = await DetailPage.waitForSubmissionToFinish()
-        console.log('[Submission Log]', submissionLog)
+        console.log('[Submission Log]', submissionLog);
+
+        await popupClosure.waitForDisplayed({ reverse: true, timeout: 5000 });
+
+        // const dialogueAlert = await $('div=Your rent application was submitted to Sanity.');
+        const dialogueAlerts = await $$('.alert-wrapper');
+
+        for( let dialogueAlert of dialogueAlerts){
+            const dialogueMsg = await dialogueAlert.$('.alert-message');
+            // await dialogueMsg.waitForDisplayed({timeout: 5000});
+            const messageText = await dialogueMsg.getText();
+            if(messageText.includes('rent application was submitted')){
+
+                console.log('Entered here in right')
+                const buttonGroup = await dialogueAlert.$('.alert-button-group');
+                const button = await buttonGroup.$('button');
+                await button.waitForDisplayed({timeout: 2000})
+                await button.click();
+                break;
+            }
+        }
+
+        await driver.pause(2000);
 
     }
 
