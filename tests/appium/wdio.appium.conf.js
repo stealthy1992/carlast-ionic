@@ -3,6 +3,7 @@ require('dotenv').config();
 
 
 exports.config = {
+  
   runner: 'local',
   specs: ['./tests/appium/specs/**/*.spec.js'],
   maxInstances: 1,
@@ -23,7 +24,17 @@ exports.config = {
     timeout: 120000,
   },
 
-  reporters: ['spec'],
+  // ── Reporters ─────────────────────────────────────────────────────────────
+  reporters: [
+    'spec',
+    ['mochawesome', {
+      outputDir:        './reports/appium',   // folder where JSON fragments go
+      outputFilePrefix: 'wdio-report',        // each file: wdio-report-0.json, wdio-report-1.json ...
+      overwrite:        false,                // keep all fragments so mochawesome-merge can combine them
+      html:             false,                // don't generate HTML per-fragment; marge does it at the end
+      json:             true,                 // output raw JSON fragments — required for merge step
+    }],
+  ],
 
   // ── Appium service — manages Appium server process automatically ──────────
   services: [
@@ -70,7 +81,7 @@ exports.config = {
       'appium:chromedriverExecutable': path.join(
         __dirname,
         'chromedriver',
-        'chromedriver96',   // ← updated from chromedriver83 to chromedriver96
+        'chromedriver96',
         'chromedriver.exe'
       ),
       'appium:chromedriverDisableBuildCheck': true,
@@ -82,8 +93,6 @@ exports.config = {
       const { execSync } = require('child_process');
       const path = require('path');
 
-      // __dirname = D:\carlast_app\tests\appium
-      // assets is a sibling folder of wdio.appium.conf.js
       const localPath = path.resolve(__dirname, './assets/uploadImage.jpg');
 
       console.log('[Setup] Pushing from:', localPath);

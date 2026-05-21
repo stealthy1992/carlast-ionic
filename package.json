@@ -38,6 +38,9 @@
     "chai": "^4.5.0",
     "dotenv": "^17.4.2",
     "mocha": "^11.7.5",
+    "mochawesome": "^7.1.4",
+    "mochawesome-merge": "^4.4.1",
+    "mochawesome-report-generator": "^6.3.2",
     "vite": "^6.4.2",
     "webdriverio": "^9.27.1"
   }
