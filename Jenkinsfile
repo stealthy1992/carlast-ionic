@@ -21,6 +21,7 @@ pipeline {
         bat 'where adb'
         bat 'where appium'
         bat 'adb devices'
+        bat 'appium driver list --installed'
       }
     }
     stage('Install Dependencies') {
@@ -52,19 +53,21 @@ VITE_RENT_API_URL=${env.VITE_RENT_API_URL}
     }
     stage('Start Emulator') {
         steps {
-            // Start AVD in background (replace 'Pixel_6' with your AVD name)
-            bat 'start /B emulator -avd Pixel_4 -no-window -no-audio'
-
-            // Wait until emulator is fully booted
             bat '''
-            :loop
-            for /f "tokens=*" %%i in ('adb shell getprop sys.boot_completed 2^>nul') do (
+            adb devices | findstr "emulator-5554" | findstr "device"
+            if %errorlevel% == 0 (
+                echo Emulator already running, skipping start
+            ) else (
+                start /B emulator -avd Pixel_4 -no-window -no-audio
+                :loop
+                for /f "tokens=*" %%i in ('adb shell getprop sys.boot_completed 2^>nul') do (
                 if "%%i"=="1" goto done
+                )
+                timeout /t 5 >nul
+                goto loop
+                :done
+                echo Emulator booted successfully
             )
-            timeout /t 5 >nul
-            goto loop
-            :done
-            echo Emulator booted successfully
             '''
         }
     }
@@ -101,7 +104,7 @@ VITE_RENT_API_URL=${env.VITE_RENT_API_URL}
   post {
     always {
         // Gracefully kill the emulator; allowEmptyArchive-style tolerance with || exit 0
-        bat 'adb -s emulator-5554 emu kill || echo No emulator to kill, skipping'
+        bat 'taskkill /F /IM emulator.exe /T || echo No emulator process found'
         archiveArtifacts artifacts: 'android/app/build/outputs/apk/debug/*.apk', fingerprint: true
         archiveArtifacts artifacts: 'appium.log', allowEmptyArchive: true
         archiveArtifacts artifacts: 'tests/appium/**/*.png,tests/appium/**/*.jpg', allowEmptyArchive: true
