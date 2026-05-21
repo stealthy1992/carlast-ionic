@@ -23,6 +23,7 @@ pipeline {
         bat 'adb devices'
         bat 'appium driver list --installed'
         bat 'npm list wdio-mochawesome-reporter'
+        bat 'emulator -list-avds'
       }
     }
     stage('Install Dependencies') {
@@ -55,21 +56,22 @@ VITE_RENT_API_URL=${env.VITE_RENT_API_URL}
     stage('Start Emulator') {
         steps {
             bat '''
-            adb devices | findstr "emulator-5554" | findstr "device"
+            @echo off
+            adb devices | findstr /C:"emulator-5554" | findstr /C:"device" >nul 2>&1
             if %errorlevel% == 0 (
                 echo Emulator already running, skipping start
             ) else (
-                start /B emulator -avd Pixel_4 -no-window -no-audio
-                :loop
-                for /f "tokens=*" %%i in ('adb shell getprop sys.boot_completed 2^>nul') do (
-                if "%%i"=="1" goto done
-                )
-                timeout /t 5 >nul
-                goto loop
-                :done
-                echo Emulator booted successfully
+                echo Starting Pixel_4 emulator...
+                start /B emulator -avd Pixel_4 -no-window -no-audio -no-snapshot-load
+                echo Waiting 90 seconds for emulator to boot...
+                ping -n 91 127.0.0.1 >nul
+                echo Done waiting
             )
             '''
+            // Small additional buffer before querying device properties
+            bat 'ping -n 6 127.0.0.1 >nul'
+            bat 'adb -s emulator-5554 shell getprop ro.product.model'
+            bat 'adb -s emulator-5554 shell getprop ro.build.version.release'
         }
     }
     stage('Prepare Report Dir') {
