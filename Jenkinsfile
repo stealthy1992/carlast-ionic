@@ -76,7 +76,8 @@ VITE_RENT_API_URL=${env.VITE_RENT_API_URL}
     }
     stage('Prepare Report Dir') {
         steps {
-            bat 'if not exist reports\\appium mkdir reports\\appium'
+            bat 'if exist reports\\appium rmdir /s /q reports\\appium'
+            bat 'mkdir reports\\appium'
         }
     }
     stage('Run Appium Tests') {
