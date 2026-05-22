@@ -33,7 +33,6 @@ exports.config = {
       overwrite:        false,
       html:             false,
       json:             true,
-      // Force the output file to use .json extension
       outputFileFormat: (options) => `wdio-report-${options.cid}.json`,
     }],
   ],
